@@ -1,0 +1,12 @@
+# build backend
+FROM openjdk:17-jdk-slim as backend
+ENV TZ=Europe/Moscow
+ENV LANG=en_US.UTF-8
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update && apt-get install -y --no-install-recommends \
+     maven
+USER root
+RUN mkdir /simple_java_app
+COPY / .
+RUN mvn install -DskipTests
+ENTRYPOINT ["java", "-jar", "target/simple_java_app.jar"]
